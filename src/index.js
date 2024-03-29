@@ -3,6 +3,7 @@ import port from "../utils/port.js";
 import _todos from "./db/todos.js";
 import _owners from "./db/owner.js";
 const app = express();
+app.use(express.json());
 
 let todos = [..._todos];
 let owners = [..._owners];
@@ -77,6 +78,20 @@ app.get("/:id/owner", (req, res) => {
   } else {
     res.status(404).json({ message: `there is no todo with id= ${todoId}` });
   }
+});
+
+// ------------ POST -----------------
+app.post("/todos", (req, res) => {
+  let newTodo = {};
+  const { statusTodo } = req.body;
+  if (statusTodo) {
+    newTodo = req.body;
+  } else {
+    newTodo = { ...req.body, statusTodo: "todo" };
+  }
+
+  todos.push(newTodo);
+  res.status(201).json({ message: `new todo is created: ${req.body.title}` });
 });
 
 // ----------- LISTEN ------------
