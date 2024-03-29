@@ -94,6 +94,26 @@ app.post("/todos", (req, res) => {
   res.status(201).json({ message: `new todo is created: ${req.body.title}` });
 });
 
+// ------------ PUT -----------
+app.put("/todos/:id", (req, res) => {
+  const { id } = req.params;
+  let todoUpdated = false;
+
+  todos = todos.map((todo) => {
+    if (todo.id === id) {
+      todoUpdated = true;
+      return req.body;
+    } else {
+      return todo;
+    }
+  });
+
+  if (todoUpdated) {
+    res.status(200).send({ message: "todo is updated", id });
+  } else {
+    res.status(404).send({ message: "there is no todo with that id", id });
+  }
+});
 // ----------- LISTEN ------------
 app.listen(port, () => {
   console.log(`server is up on ${port}`);
