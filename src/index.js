@@ -114,6 +114,31 @@ app.put("/todos/:id", (req, res) => {
     res.status(404).send({ message: "there is no todo with that id", id });
   }
 });
+
+app.put("/changeStatus/:id/status", (req, res) => {
+  const { id } = req.params;
+  let updated = false;
+
+  todos = todos.map((todo) => {
+    if (todo.id === id) {
+      updated = true;
+
+      return { ...todo, statusTodo: req.body.statusTodo };
+    } else {
+      return todo;
+    }
+  });
+
+  if (updated) {
+    res.status(200).send({
+      message: `todo status is updated: ${req.body.statusTodo}`,
+      id,
+    });
+  } else {
+    res.status(404).send({ message: "there is no todo with that id", id });
+  }
+});
+
 // ----------- LISTEN ------------
 app.listen(port, () => {
   console.log(`server is up on ${port}`);
