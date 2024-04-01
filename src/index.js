@@ -257,7 +257,7 @@ app.delete("/todos/delete/:ownerId", (req, res) => {
     const deletedTodos = todos.filter((todo) => todo.ownerId === ownerId);
     todos = todos.filter((todo) => todo.ownerId !== ownerId);
 
-    // Update owners database to indicate no todos for this owner
+    // Update owners
     ownerFoundByTodoId.todos = "no todos";
 
     deletedTodos.length > 0
