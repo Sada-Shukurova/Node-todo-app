@@ -151,8 +151,7 @@ app.put("/todos/:id", (req, res) => {
   }
 });
 
-
-//UPDATE TODO STATUS BY ID 
+//UPDATE TODO STATUS BY ID
 
 app.put("/changeStatus/:id/status", (req, res) => {
   const { id } = req.params;
@@ -162,7 +161,10 @@ app.put("/changeStatus/:id/status", (req, res) => {
     if (todo.id === id) {
       updated = true;
 
-      return { ...todo, statusTodo: req.body.statusTodo };
+      return {
+        ...todo,
+        statusTodo: req.body.statusTodo ? req.body.statusTodo : todo.statusTodo,
+      };
     } else {
       return todo;
     }
@@ -170,7 +172,11 @@ app.put("/changeStatus/:id/status", (req, res) => {
 
   if (updated) {
     res.status(200).send({
-      message: `todo status is updated: ${req.body.statusTodo}`,
+      message: `${
+        req.body.statusTodo
+          ? "todo status is updated"
+          : "todo status is the same"
+      }`,
       id,
     });
   } else {
@@ -188,7 +194,7 @@ app.put("/changeOwner/:id/newOwnerId", (req, res) => {
     if (owner.id === id) {
       updated = true;
 
-      return { ...owner, id: req.body.id };
+      return { ...owner, id: req.body.id ? req.body.id : owner.id };
     } else {
       return owner;
     }
@@ -204,7 +210,9 @@ app.put("/changeOwner/:id/newOwnerId", (req, res) => {
 
   if (updated) {
     res.status(200).send({
-      message: `owner is updated: ${req.body.id}`,
+      message: `${
+        req.body.id ? "owner id is updated" : "owner id is the same"
+      }`,
       id,
     });
   } else {
