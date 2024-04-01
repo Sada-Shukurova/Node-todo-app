@@ -253,6 +253,7 @@ app.delete("/todos/status/:status", (req, res) => {
 app.delete("/todos/delete/:ownerId", (req, res) => {
   const { ownerId } = req.params;
   const ownerFoundByTodoId = owners.find((owner) => owner.id === ownerId);
+
   if (ownerFoundByTodoId) {
     const deletedTodos = todos.filter((todo) => todo.ownerId === ownerId);
     todos = todos.filter((todo) => todo.ownerId !== ownerId);
