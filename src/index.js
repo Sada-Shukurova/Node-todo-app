@@ -220,6 +220,18 @@ app.put("/changeOwner/:id/newOwnerId", (req, res) => {
   }
 });
 
+// ----------------- DELETE ----------
+
+// DELETE TODO BY ID
+
+app.delete("/todos/:id", (req, res) => {
+  const { id } = req.params;
+  todos = todos.filter((todo) => todo.id !== id);
+  res.status(200).send({ message: `todo with id ${id} is deleted` });
+});
+
+
+
 // ----------- LISTEN ------------
 app.listen(port, () => {
   console.log(`server is up on ${port}`);
