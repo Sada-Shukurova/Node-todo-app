@@ -10,6 +10,8 @@ let owners = [..._owners];
 
 // --------- GET ----------
 
+// GET ALL TODOS BY LIMIT
+
 app.get("/todos", (req, res) => {
   const limit = req.query.limit ?? 3;
   const statusTodo = req.query.statusTodo;
@@ -33,7 +35,8 @@ app.get("/todos", (req, res) => {
   }
 });
 
-//
+//GET TODO BY ID
+
 app.get("/todos/:id", (req, res) => {
   const id = req.params.id;
   const todo = todos.find((todo) => todo.id === id);
@@ -43,7 +46,8 @@ app.get("/todos/:id", (req, res) => {
     res.status(404).json({ message: `todo with id=${id} is not found` });
   }
 });
-//
+
+//GET ALL OWNERS BY LIMIT
 
 app.get("/owners", (req, res) => {
   const limit = req.query.limit ?? 5;
@@ -65,7 +69,9 @@ app.get("/owners", (req, res) => {
     res.status(404).json({ message: `No owner found with given parameters` });
   }
 });
-//
+
+//GET OWNER TODOS BY OWNER ID
+
 app.get("/owner/:ownerId", (req, res) => {
   const ownerId = req.params.ownerId;
   const owner = owners.find((ow) => ow.id === ownerId);
@@ -83,7 +89,9 @@ app.get("/owner/:ownerId", (req, res) => {
     res.status(404).json({ message: `there is no owner with id= ${ownerId}` });
   }
 });
-//
+
+//GET OWNER INFO BY TODO ID
+
 app.get("/:id/owner", (req, res) => {
   const todoId = req.params.id;
   const todo = todos.find((to) => to.id === todoId);
@@ -103,6 +111,9 @@ app.get("/:id/owner", (req, res) => {
 });
 
 // ------------ POST -----------------
+
+// POST NEW TODO
+
 app.post("/todos", (req, res) => {
   let newTodo = {};
   const { statusTodo } = req.body;
@@ -117,6 +128,9 @@ app.post("/todos", (req, res) => {
 });
 
 // ------------ PUT -----------
+
+//UPDATE TODO BY ID
+
 app.put("/todos/:id", (req, res) => {
   const { id } = req.params;
   let todoUpdated = false;
@@ -136,6 +150,9 @@ app.put("/todos/:id", (req, res) => {
     res.status(404).send({ message: "there is no todo with that id", id });
   }
 });
+
+
+//UPDATE TODO STATUS BY ID 
 
 app.put("/changeStatus/:id/status", (req, res) => {
   const { id } = req.params;
@@ -160,6 +177,8 @@ app.put("/changeStatus/:id/status", (req, res) => {
     res.status(404).send({ message: "there is no todo with that id", id });
   }
 });
+
+//UPDATE OWNER ID IN OWNERS AND OWNER ID IN TODOS
 
 app.put("/changeOwner/:id/newOwnerId", (req, res) => {
   const { id } = req.params;
