@@ -44,13 +44,35 @@ app.get("/todos/:id", (req, res) => {
   }
 });
 //
+
+app.get("/owners", (req, res) => {
+  const limit = req.query.limit ?? 5;
+  const ownerId = req.query.id;
+
+  let filteredOwners = owners;
+
+  if (ownerId) {
+    filteredOwners = filteredOwners.filter((owner) => owner.id === ownerId);
+  }
+
+  if (limit) {
+    filteredOwners = filteredOwners.slice(0, limit);
+  }
+
+  if (filteredOwners.length > 0) {
+    res.status(200).json(filteredOwners);
+  } else {
+    res.status(404).json({ message: `No owner found with given parameters` });
+  }
+});
+//
 app.get("/owner/:ownerId", (req, res) => {
   const ownerId = req.params.ownerId;
   const owner = owners.find((ow) => ow.id === ownerId);
 
   if (owner) {
     const todoByOwner = todos.filter(
-      (todoByOwner) => todoByOwner.ownerld === owner.id
+      (todoByOwner) => todoByOwner.ownerId === owner.id
     );
     if (todoByOwner.length > 0) {
       res.status(200).json(todoByOwner);
@@ -136,6 +158,38 @@ app.put("/changeStatus/:id/status", (req, res) => {
     });
   } else {
     res.status(404).send({ message: "there is no todo with that id", id });
+  }
+});
+
+app.put("/changeOwner/:id/newOwnerId", (req, res) => {
+  const { id } = req.params;
+  let updated = false;
+
+  owners = owners.map((owner) => {
+    if (owner.id === id) {
+      updated = true;
+
+      return { ...owner, id: req.body.id };
+    } else {
+      return owner;
+    }
+  });
+  todos = todos.map((todo) => {
+    if (todo.ownerId === id) {
+      updated = true;
+      return { ...todo, ownerId: req.body.id };
+    } else {
+      return todo;
+    }
+  });
+
+  if (updated) {
+    res.status(200).send({
+      message: `owner is updated: ${req.body.id}`,
+      id,
+    });
+  } else {
+    res.status(404).send({ message: "there is no owner with that id", id });
   }
 });
 
