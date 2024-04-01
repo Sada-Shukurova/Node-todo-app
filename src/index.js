@@ -230,7 +230,48 @@ app.delete("/todos/:id", (req, res) => {
   res.status(200).send({ message: `todo with id ${id} is deleted` });
 });
 
+// DELETE ALL TODOS BY STATUS
 
+app.delete("/todos/status/:status", (req, res) => {
+  const { status } = req.params;
+  const todosToDelete = todos.filter((todo) => todo.statusTodo === status);
+
+  if (todosToDelete.length > 0) {
+    todos = todos.filter((todo) => todo.statusTodo !== status);
+    res.status(200).json({
+      message: `all todos with status ${status} are deleted`,
+    });
+  } else {
+    res
+      .status(404)
+      .json({ message: `todos of status ${status} are not found` });
+  }
+});
+
+// DELETE ALL TODOS BY OWNER ID
+
+app.delete("/todos/delete/:ownerId", (req, res) => {
+  const { ownerId } = req.params;
+  const ownerFoundByTodoId = owners.find((owner) => owner.id === ownerId);
+  if (ownerFoundByTodoId) {
+    const deletedTodos = todos.filter((todo) => todo.ownerId === ownerId);
+    todos = todos.filter((todo) => todo.ownerId !== ownerId);
+
+    // Update owners database to indicate no todos for this owner
+    ownerFoundByTodoId.todos = "no todos";
+
+    deletedTodos.length > 0
+      ? res.status(200).json({
+          message: `All todos by owner with id ${ownerId} are deleted`,
+          deletedTodos: deletedTodos,
+        })
+      : res.status(200).json({
+          message: `There are no todos`,
+        });
+  } else {
+    res.status(404).json({ message: `There are no owners with id ${ownerId}` });
+  }
+});
 
 // ----------- LISTEN ------------
 app.listen(port, () => {
